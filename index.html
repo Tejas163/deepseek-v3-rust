@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DeepSeek V3.2 - Learn from Scratch</title>
+    <title>DeepSeek V3.2 - Rust Implementation</title>
     <style>
         * {
             margin: 0;
@@ -13,12 +13,11 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.6;
-            color: #333;
             background: #0d1117;
             color: #c9d1d9;
         }
         .container {
-            max-width: 1200px;
+            max-width: 900px;
             margin: 0 auto;
             padding: 2rem;
         }
@@ -30,7 +29,7 @@
         h1 {
             font-size: 3rem;
             margin-bottom: 1rem;
-            background: linear-gradient(135deg, #58a6ff, #bc8cff);
+            background: linear-gradient(135deg, #dea584, #f5a623);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -52,11 +51,18 @@
             border: 1px solid #30363d;
             font-size: 0.875rem;
         }
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
+        .section {
             padding: 3rem 0;
+            border-bottom: 1px solid #30363d;
+        }
+        .section h2 {
+            color: #58a6ff;
+            margin-bottom: 1.5rem;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
         }
         .feature-card {
             background: #161b22;
@@ -65,86 +71,61 @@
             padding: 1.5rem;
         }
         .feature-card h3 {
-            color: #58a6ff;
+            color: #dea584;
             margin-bottom: 0.75rem;
         }
         .feature-card p {
             color: #8b949e;
             font-size: 0.9rem;
         }
-        .implementation-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-            padding: 3rem 0;
-        }
-        .impl-card {
-            background: #161b22;
-            border: 1px solid #30363d;
+        .cta-box {
+            background: linear-gradient(135deg, #1a2a1a, #0d1a0d);
+            border: 1px solid #238636;
             border-radius: 0.5rem;
             padding: 2rem;
             text-align: center;
-            transition: transform 0.2s, border-color 0.2s;
+            margin: 2rem 0;
         }
-        .impl-card:hover {
-            transform: translateY(-4px);
-            border-color: #58a6ff;
-        }
-        .impl-card h2 {
-            font-size: 2rem;
+        .cta-box h3 {
+            color: #3fb950;
             margin-bottom: 1rem;
         }
-        .impl-card a {
+        .btn {
             display: inline-block;
-            margin-top: 1rem;
             padding: 0.75rem 1.5rem;
             background: #238636;
             color: white;
             text-decoration: none;
             border-radius: 0.375rem;
             font-weight: 600;
+            margin: 0.5rem;
         }
-        .impl-card a:hover {
+        .btn:hover {
             background: #2ea043;
         }
-        .python-card a { background: #3572A5; }
-        .python-card a:hover { background: #4f7eb8; }
-        .jax-card a { background: #F5E017; color: #000; }
-        .jax-card a:hover { background: #f7eb4a; }
-        .stats {
-            display: flex;
-            justify-content: center;
-            gap: 4rem;
-            padding: 3rem 0;
-            border-top: 1px solid #30363d;
-            border-bottom: 1px solid #30363d;
+        .btn-secondary {
+            background: #21262d;
+            border: 1px solid #30363d;
         }
-        .stat {
-            text-align: center;
+        .btn-secondary:hover {
+            background: #30363d;
         }
-        .stat-value {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #58a6ff;
+        .code-block {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
         }
-        .stat-label {
-            color: #8b949e;
-            margin-top: 0.5rem;
+        .code-block code {
+            color: #c9d1d9;
         }
         footer {
             text-align: center;
             padding: 2rem;
             color: #8b949e;
-            border-top: 1px solid #30363d;
-        }
-        @media (max-width: 768px) {
-            .implementation-grid {
-                grid-template-columns: 1fr;
-            }
-            .stats {
-                flex-direction: column;
-                gap: 2rem;
-            }
         }
     </style>
 </head>
@@ -152,84 +133,96 @@
     <div class="container">
         <header>
             <h1>DeepSeek V3.2</h1>
-            <p class="subtitle">Learn to implement the complete DeepSeek V3.2 architecture from scratch</p>
+            <p class="subtitle">Learn to implement DeepSeek V3.2 architecture in Rust using Candle</p>
             <div class="badges">
-                <span class="badge">Mixture of Experts</span>
+                <span class="badge">🦀 Rust + Candle</span>
+                <span class="badge">MoE Architecture</span>
                 <span class="badge">671B Parameters</span>
-                <span class="badge">Sparse Attention</span>
-                <span class="badge">Open Source</span>
             </div>
         </header>
 
-        <div class="stats">
-            <div class="stat">
-                <div class="stat-value">671B</div>
-                <div class="stat-label">Total Parameters</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value">37B</div>
-                <div class="stat-label">Active Per Token</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value">128K</div>
-                <div class="stat-label">Context Length</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value">8</div>
-                <div class="stat-label">Notebooks</div>
-            </div>
-        </div>
+        <section class="section">
+            <h2>What is This?</h2>
+            <p>A comprehensive implementation of DeepSeek V3.2 in Rust using the Candle ML framework. Learn the complete architecture from scratch!</p>
+        </section>
 
-        <section class="features">
-            <div class="feature-card">
-                <h3>Multi-Head Latent Attention</h3>
-                <p>Learn how MLA compresses KV cache into latent space, reducing memory from O(n·d) to O(d_latent) for long contexts.</p>
-            </div>
-            <div class="feature-card">
-                <h3>Mixture of Experts</h3>
-                <p>Implement sparse MoE with aux-loss-free load balancing. Only 8-9 of 256 experts activated per token.</p>
-            </div>
-            <div class="feature-card">
-                <h3>DeepSeek Sparse Attention</h3>
-                <p>Reduce attention complexity from O(L²) to O(L·k) using lightning indexer for token selection.</p>
-            </div>
-            <div class="feature-card">
-                <h3>Multi-Token Prediction</h3>
-                <p>Predict multiple tokens ahead during training for better sample efficiency.</p>
-            </div>
-            <div class="feature-card">
-                <h3>Training Pipeline</h3>
-                <p>Full training loop with FP8 mixed precision, loss functions, and optimization strategies.</p>
-            </div>
-            <div class="feature-card">
-                <h3>Beam Search Generation</h3>
-                <p>Implement greedy, beam search, temperature, top-k, and nucleus sampling from scratch.</p>
+        <section class="section">
+            <h2>Key Components Implemented</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>Multi-Head Latent Attention</h3>
+                    <p>KV cache compression into latent space for efficient long-context processing.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Mixture of Experts</h3>
+                    <p>256 experts with aux-loss-free load balancing. Only 8-9 activated per token.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>DeepSeek Sparse Attention</h3>
+                    <p>Reduces O(L²) to O(L·k) complexity using lightning indexer.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Beam Search</h3>
+                    <p>Complete implementation from scratch - greedy, beam search, sampling.</p>
+                </div>
             </div>
         </section>
 
-        <section>
-            <h2 style="text-align: center; margin-bottom: 2rem;">Choose Your Implementation</h2>
-            <div class="implementation-grid">
-                <div class="impl-card python-card">
-                    <h2>PyTorch</h2>
-                    <p>Jupyter notebooks with tasks, hints, and verification</p>
-                    <a href="pytorch/index.html">View Notebooks →</a>
-                </div>
-                <div class="impl-card jax-card">
-                    <h2>JAX</h2>
-                    <p>Functional ML with Flax</p>
-                    <a href="jax/index.html">View Notebooks →</a>
-                </div>
-                <div class="impl-card">
-                    <h2>Rust</h2>
-                    <p>Using Candle framework with mdBook documentation</p>
-                    <a href="book/index.html">View Docs →</a>
-                </div>
+        <section class="section">
+            <h2>Quick Start</h2>
+            <div class="code-block">
+                <code># Clone and build<br>
+git clone https://github.com/Tejas163/deepseek-v3-rust<br>
+cd deepseek-v3-rust<br><br>
+# Run examples<br>
+cargo run --example train<br>
+cargo run --example inference</code>
             </div>
+        </section>
+
+        <div class="cta-box">
+            <h3>Start Learning DeepSeek V3.2 in Rust!</h3>
+            <p>Follow the documentation to understand each component step by step.</p>
+            <br>
+            <a href="https://github.com/Tejas163/deepseek-v3-rust" class="btn">View on GitHub</a>
+            <a href="https://crates.io/crates/candle-core" class="btn btn-secondary">Candle Docs</a>
+        </div>
+
+        <section class="section">
+            <h2>Simplified Model Specs</h2>
+            <p>For learning purposes, we implement a scaled-down version:</p>
+            <table style="width:100%; margin-top:1rem; border-collapse: collapse;">
+                <tr style="border-bottom:1px solid #30363d;">
+                    <td style="padding:0.5rem;">Component</td>
+                    <td style="padding:0.5rem;">Full Model</td>
+                    <td style="padding:0.5rem;">Our Implementation</td>
+                </tr>
+                <tr style="border-bottom:1px solid #30363d;">
+                    <td style="padding:0.5rem;">Hidden Size</td>
+                    <td style="padding:0.5rem;">7168</td>
+                    <td style="padding:0.5rem;">512</td>
+                </tr>
+                <tr style="border-bottom:1px solid #30363d;">
+                    <td style="padding:0.5rem;">Layers</td>
+                    <td style="padding:0.5rem;">61</td>
+                    <td style="padding:0.5rem;">4</td>
+                </tr>
+                <tr style="border-bottom:1px solid #30363d;">
+                    <td style="padding:0.5rem;">Experts</td>
+                    <td style="padding:0.5rem;">256</td>
+                    <td style="padding:0.5rem;">8</td>
+                </tr>
+                <tr style="border-bottom:1px solid #30363d;">
+                    <td style="padding:0.5rem;">Parameters</td>
+                    <td style="padding:0.5rem;">671B</td>
+                    <td style="padding:0.5rem;">~100M</td>
+                </tr>
+            </table>
         </section>
 
         <footer>
-            <p>Learn DeepSeek V3.2 architecture end-to-end with training and inference</p>
+            <p>Built with Rust + Candle 🕯️</p>
+            <p><a href="https://github.com/Tejas163/deepseek-v3-rust" style="color:#58a6ff;">View Source Code</a></p>
         </footer>
     </div>
 </body>
