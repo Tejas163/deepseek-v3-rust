@@ -1,0 +1,13 @@
+[book]
+authors = ["Your Name"]
+title = "DeepSeek V3.2 - Rust Implementation"
+
+[build.build-dir]
+../website
+
+[output.html]
+additional-js = []
+additional-css = []
+
+[output.html.playground]
+editable = false

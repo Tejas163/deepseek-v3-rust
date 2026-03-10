@@ -1,0 +1,24 @@
+[package]
+name = "deepseek-v3"
+version = "0.1.0"
+edition = "2021"
+description = "DeepSeek V3.2 implementation in Rust using Candle"
+
+[dependencies]
+candle-core = "0.8"
+candle-nn = "0.8"
+candle-optimizers = "0.8"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+[features]
+cuda = ["candle-core/cuda"]
+accelerate = ["candle-core/accelerate"]
+
+[[example]]
+name = "train"
+path = "examples/train.rs"
+
+[[example]]
+name = "inference"
+path = "examples/inference.rs"
